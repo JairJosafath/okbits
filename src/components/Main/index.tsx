@@ -1,46 +1,62 @@
 "use client";
 
-import { DragEvent } from "react";
+import { DragEvent, useRef, useState } from "react";
 
 export default function Main() {
+  const fileInput = useRef<HTMLInputElement>(null);
+  const [animate, setAnimate] = useState(false);
+
   function getData(event: DragEvent<HTMLDivElement>) {
     const dt = event.dataTransfer;
     const files = dt.files;
     console.log(files[0].name);
   }
   return (
-    <div className="flex-1  bg-blue-200">
+    <div className="flex-1  bg-gray-0 flex justify-center">
+      <input hidden type="file" accept=".unl" ref={fileInput} />
       <div
-        className="
+        className={`
+        flex-1
       h-52
-      bg-green-400
+      max-w-2xl
+      bg-gray-200
       mx-7
       my-10
       border-2
-      border-gray-500
+      border-gray-400
       flex
       justify-center
       items-center
-      hover:bg-slate-700
+      hover:bg-gray-400
       hover:cursor-pointer
       rounded-lg
       border-dashed
       hover:text-white
-      "
+      active:scale-95
+      transitions-all
+      duration-300
+      ${animate && "animate-drop-it"}
+      `}
+        onClick={() => fileInput.current?.click()}
         onDragEnter={(e) => {
           e.preventDefault();
+          setAnimate(true);
         }}
         onDragOver={(e) => {
           e.preventDefault();
+          setAnimate(true);
         }}
         onDragEnd={(e) => {
           e.preventDefault();
+          setAnimate(false);
         }}
         onDragLeave={(e) => {
           e.preventDefault();
+          setAnimate(false);
         }}
         onDrop={(e) => {
           e.preventDefault();
+          setAnimate(false);
           getData(e);
         }}
       >

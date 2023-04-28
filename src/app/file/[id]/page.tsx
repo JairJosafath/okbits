@@ -1,8 +1,9 @@
+import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
 
 export default function Page({ params }: { params: { id: string } }) {
   return (
-    <div className="bg-orange-500 w-full grid auto-rows-min gap-6 p-6 ">
+    <div className="bg-gray-0 w-full grid auto-rows-min gap-6 p-6 ">
       {/* File info and controls */}
       <div className="w-full flex justify-around">
         {/* info */}
@@ -14,16 +15,30 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         {/* controls */}
         <div className="grid">
-          <button>share</button>
-          <button>delete</button>
+          <Button
+            label="Share"
+            color="bg-green-700 px-2 py-1 rounded-md
+    text-gray-200
+    hover:bg-green-500"
+          >
+            share
+          </Button>
+          <Button
+            label="Delete"
+            color="bg-red-700 px-2 py-1 rounded-md
+    text-gray-200
+    hover:bg-red-500"
+          >
+            delete
+          </Button>
         </div>
       </div>
       {/* File output */}
       <div className="grid gap-6 w-full">
-        <textarea className="h-64 resize-none rounded-lg max-w-2xl w-4/5 justify-self-center" />
+        <textarea className="border h-64 resize-none rounded-lg max-w-2xl w-4/5 justify-self-center focus-visible:border focus-visible:border-gray-500 p-2" />
         <div className="flex gap-6 justify-self-center">
-          <button>cancel</button>
-          <button>save</button>
+          <Button label="Cancel">cancel</Button>
+          <Button label="Save">save</Button>
         </div>
       </div>
     </div>
