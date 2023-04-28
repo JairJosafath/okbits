@@ -6,7 +6,10 @@ export default function Sidebar() {
       </div>
       <div>
         {["file1", "file2", "file3"].map((file) => (
-          <div className="m-1 rounded-md px-2 hover:bg-red-100 hover:cursor-pointer">
+          <div
+            key={file}
+            className="m-1 rounded-md px-2 hover:bg-red-100 hover:cursor-pointer"
+          >
             {file}
           </div>
         ))}

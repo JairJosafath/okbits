@@ -1,5 +1,7 @@
+import Topbar from "@/components/Topbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import Sidebar from "@/components/Sidebar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +17,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <div>
+          {/* Topbar */}
+          <Topbar />
+        </div>
+        <div className="flex h-full w-full top-0 left-0 absolute pt-10">
+          {/* Sidebar */}
+          <Sidebar />
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
