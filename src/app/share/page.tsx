@@ -29,7 +29,7 @@ export default function Share() {
             <label>Content</label>
             <textarea className="h-32 resize-none rounded-lg" />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 flex justify-center items-center gap-8">
             <button className="bg-blue-500 rounded-md p-1">Cancel</button>
             <button className="bg-blue-500 rounded-md p-1">Send</button>
           </div>
