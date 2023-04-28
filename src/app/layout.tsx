@@ -18,10 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div>
-          {/* Topbar */}
-          <Topbar />
-        </div>
+        {/* Topbar */}
+        <Topbar />
+
         <div className="flex h-full w-full top-0 left-0 absolute pt-10">
           {/* Sidebar */}
           <Sidebar />
