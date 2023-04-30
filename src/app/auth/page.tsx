@@ -1,12 +1,15 @@
 "use client";
 import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
+import SignIn from "@/components/SignIn";
+import SignUp from "@/components/SignUp";
 import { useState } from "react";
 
 export default function Page() {
   const [state, setState] = useState<
     "signin" | "signup" | "reset" | "confirmreset" | "newpassword"
   >("signin");
+
   return (
     <div className="absolute top-0 h-screen w-screen bg-gray-100 flex items-center justify-center">
       <div className="h-2/5 w-1/2 bg-gray-100 min-w-fit min-h-fit max-h-max max-w-2xl shadow-md">
@@ -32,44 +35,8 @@ export default function Page() {
           </Button>
         </div>
         {/* content */}
-        {state === "signin" && (
-          <>
-            <div className="grid auto-rows-min gap-10 p-5 items-center bg-gray-100 justify-center h-3/4">
-              <LabeledInput label="email" />
-              <LabeledInput label="password" />
-              <p
-                className="w-60 mx-auto bg-gray-100 pl-12 cursor-pointer"
-                onClick={() => setState("reset")}
-              >
-                Forgot Password
-              </p>
-              <p
-                className="w-60 mx-auto bg-gray-100 pl-12 cursor-pointer"
-                onClick={() => setState("signup")}
-              >
-                Create Account
-              </p>
-            </div>{" "}
-            {/* footer */}
-            <div className="flex justify-center bg-gray-100">
-              <Button label="Sign In" />
-            </div>
-          </>
-        )}
-        {state === "signup" && (
-          <>
-            {" "}
-            <div className="grid auto-rows-min gap-10 p-5 items-center bg-gray-100 justify-center h-3/4">
-              <LabeledInput label="email" />
-              <LabeledInput label="password" />
-              <LabeledInput label="confirm password" />
-            </div>
-            {/* footer */}
-            <div className="flex justify-center bg-gray-100">
-              <Button label="Create Account" />
-            </div>
-          </>
-        )}
+        {state === "signin" && <SignIn state={state} setState={setState} />}
+        {state === "signup" && <SignUp state={state} setState={setState} />}
         {state === "reset" && (
           <>
             {/* <div className="grid auto-rows-min gap-10 p-5 items-center bg-gray-100 justify-center h-3/4">
