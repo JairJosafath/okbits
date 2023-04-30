@@ -19,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         {/* Topbar */}
+
         <Topbar />
 
         <div className="flex h-full w-full top-0 left-0 absolute pt-10">
