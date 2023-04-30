@@ -1,7 +1,12 @@
+"use client";
+import { useRouter } from "next/navigation";
 import Topbar from "@/components/Topbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
+import { AuthContext } from "@/context/authContext";
+import { useEffect, useState } from "react";
+import { UserI } from "@/util/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,18 +20,33 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [user, setUser] = useState<UserI>({ username: "", id: 0 });
+  const router = useRouter();
+  useEffect(() => {
+    console.log("user object change", user);
+    if (!user.id) {
+      router.push("/auth");
+    }
+  }, [user.id]);
   return (
     <html lang="en">
       <body className={inter.className}>
-        {/* Topbar */}
+        {user ? (
+          <>
+            {/* Topbar */}
+            <AuthContext.Provider value={{ user, setUser }}>
+              <Topbar />
 
-        <Topbar />
-
-        <div className="flex h-full w-full top-0 left-0 absolute pt-10">
-          {/* Sidebar */}
-          <Sidebar />
-          {children}
-        </div>
+              <div className="flex h-full w-full top-0 left-0 absolute pt-10">
+                {/* Sidebar */}
+                <Sidebar />
+                {children}
+              </div>
+            </AuthContext.Provider>
+          </>
+        ) : (
+          children
+        )}
       </body>
     </html>
   );

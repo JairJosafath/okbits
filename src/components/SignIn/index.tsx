@@ -1,7 +1,17 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import LabeledInput from "../LabeledInput";
 import Button from "../Button";
+import useFetch from "@/hooks/useFetch";
+import useAuth from "@/hooks/useAuth";
+import { AuthContext } from "@/context/authContext";
+import { useRouter } from "next/navigation";
 
 interface Props {
   state: "reset" | "signup" | "signin" | "confirmreset" | "newpassword";
@@ -15,9 +25,17 @@ interface Props {
 export default function SignIn({ state, setState }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
+  const { setCredentials, user } = useAuth();
+  const { user: contextUser, setUser } = useContext(AuthContext);
+  const router = useRouter();
+  useEffect(() => {
+    if (user.id) {
+      setUser?.(user);
+      router.replace("/");
+    }
+  }, [user.id]);
   function signIn() {
-    console.log({ username, password });
+    setCredentials({ username, password });
   }
 
   return (
