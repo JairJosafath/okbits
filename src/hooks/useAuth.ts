@@ -10,6 +10,7 @@ export default function useAuth() {
     password: string;
   }>({ username: "", password: "" });
   const { setReq, data, isLoading, isError } = useFetch();
+  const [signout, setSignout] = useState<boolean>(false);
   function sigIn(username: string, password: string) {
     setReq({
       input: `${API_ENDPOINT}/signin`,
@@ -17,7 +18,6 @@ export default function useAuth() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: "follow",
         body: JSON.stringify({
@@ -27,12 +27,22 @@ export default function useAuth() {
       },
     });
   }
+  function signUserOut() {
+    setReq({
+      input: `${API_ENDPOINT}/signout`,
+    });
+    setUser({ username: "", id: 0 });
+  }
 
   useEffect(() => {
-    console.log(credentials);
     const { username, password } = credentials;
     if (username && password) sigIn(username, password);
   }, [credentials.password, credentials.username]);
+
+  useEffect(() => {
+    if (signout) signUserOut();
+    return () => setSignout(false);
+  }, [signout]);
 
   useEffect(() => {
     const temp: any = data;
@@ -41,5 +51,6 @@ export default function useAuth() {
       setUser(tempuser);
     }
   }, [data]);
-  return { setCredentials, user };
+
+  return { setCredentials, user, setSignout };
 }

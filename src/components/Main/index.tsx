@@ -1,19 +1,33 @@
 "use client";
 
-import { DragEvent, useRef, useState } from "react";
+import { DragEvent, useEffect, useRef, useState } from "react";
 
 export default function Main() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
+  const [data, setData] = useState<any>();
 
   function getData(event: DragEvent<HTMLDivElement>) {
-    const dt = event.dataTransfer;
-    const files = dt.files;
-    console.log(files[0].name);
+    const dataTransfer = event.dataTransfer;
+    const files = dataTransfer.files;
+    setData(files[0]);
   }
+
+  useEffect(() => {
+    console.log("the data", data);
+  }, [data]);
+
   return (
     <div className="flex-1  bg-gray-0 flex justify-center">
-      <input hidden type="file" accept=".unl" ref={fileInput} />
+      <input
+        hidden
+        type="file"
+        accept=".unl"
+        ref={fileInput}
+        onChange={(e) => {
+          setData(e.currentTarget?.files?.[0]);
+        }}
+      />
       <div
         className={`
         flex-1
