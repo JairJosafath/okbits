@@ -6,12 +6,12 @@ export interface UserI {
 
 export interface FileI {
   id?: number;
-  name: string;
+  name?: string;
   size?: string;
   path?: string;
-  data_unl?: Buffer;
-  data_pdf?: Buffer;
-  data_json?: Buffer;
+  data_unl?: File;
+  data_pdf?: File;
+  data_json?: File;
   createdat?: Date;
   updatedat?: Date;
   owner?: string;

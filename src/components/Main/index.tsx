@@ -1,11 +1,13 @@
 "use client";
 
+import useFile from "@/hooks/useFile";
 import { DragEvent, useEffect, useRef, useState } from "react";
 
 export default function Main() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<File>();
+  const { setUpload } = useFile();
 
   function getData(event: DragEvent<HTMLDivElement>) {
     const dataTransfer = event.dataTransfer;
@@ -15,6 +17,7 @@ export default function Main() {
 
   useEffect(() => {
     console.log("the data", data);
+    if (data) setUpload(data);
   }, [data]);
 
   return (

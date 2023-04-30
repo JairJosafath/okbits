@@ -9,6 +9,7 @@ export default function useAuth() {
     username: string;
     password: string;
   }>({ username: "", password: "" });
+
   const { setReq, data, isLoading, isError } = useFetch();
   const [signout, setSignout] = useState<boolean>(false);
   function sigIn(username: string, password: string) {
@@ -19,7 +20,6 @@ export default function useAuth() {
         headers: {
           "Content-Type": "application/json",
         },
-        redirect: "follow",
         body: JSON.stringify({
           username,
           password,
