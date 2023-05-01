@@ -7,6 +7,7 @@ export interface UserI {
 export interface FileI {
   id?: number;
   name?: string;
+  alias?: string;
   size?: number;
   path?: string;
   arrayBuffer?: ArrayBuffer | null | string;

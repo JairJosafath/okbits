@@ -1,14 +1,34 @@
 "use client";
 import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
+import { AuthContext } from "@/context/authContext";
 import useFile from "@/hooksTanstack/useFile";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const { getFileById } = useFile();
+  const { user } = useContext(AuthContext);
+  const { getFileById, getFileData, updateFile } = useFile();
   const { data: fileById } = getFileById(id);
+  const { isSuccess } = updateFile;
   const [textfile, setTextFile] = useState("");
+  const { data: file } = getFileData(
+    fileById?.alias?.replace(user?.id.toString() + "/files/", "") || ""
+  );
+  const [tempFile, setTempFile] = useState({
+    id: fileById?.id,
+    name: fileById?.name,
+    data: textfile,
+  });
+
+  useEffect(() => {
+    if (file) setTextFile(file);
+    setTempFile({
+      id: fileById?.id,
+      name: fileById?.name,
+      data: file || "",
+    });
+  }, [file]);
 
   useEffect(() => {
     if (fileById?.data_unl) {
@@ -25,16 +45,31 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="w-full flex justify-around">
         {/* info */}
         <div className="grid gap-2">
-          <LabeledInput label="file name" value={fileById?.name} />
+          <LabeledInput
+            label="file name"
+            value={tempFile.name}
+            onChange={(e) => {
+              setTempFile({ ...tempFile, name: e.target.value });
+            }}
+          />
           <LabeledInput
             label="created on"
             value={new Date(fileById?.createdat || "").toString()}
+            custom={"border-none"}
+            disabled
           />
           <LabeledInput
             label="last modified"
             value={new Date(fileById?.updatedat || "").toString()}
+            custom={"border-none"}
+            disabled
           />
-          <LabeledInput label="size" value={fileById?.size} />
+          <LabeledInput
+            label="size"
+            value={fileById?.size}
+            custom={"border-none"}
+            disabled
+          />
         </div>
         {/* controls */}
         <div className="grid">
@@ -60,11 +95,37 @@ export default function Page({ params }: { params: { id: string } }) {
       <div className="grid gap-6 w-full">
         <textarea
           className="border h-64 resize-none rounded-lg max-w-2xl w-4/5 justify-self-center focus-visible:border focus-visible:border-gray-500 p-2"
-          value={""}
+          value={tempFile.data}
+          onChange={(e) => {
+            setTempFile({ ...tempFile, data: e.target.value });
+          }}
         />
         <div className="flex gap-6 justify-self-center">
-          <Button label="Cancel">cancel</Button>
-          <Button label="Save">save</Button>
+          <Button
+            label="Cancel"
+            onClick={() => {
+              setTempFile({
+                id: fileById?.id,
+                data: textfile,
+                name: fileById?.name,
+              });
+            }}
+          >
+            reset
+          </Button>
+          <Button
+            label="Save"
+            onClick={() => {
+              const temp = new File([textfile], "updated.unl");
+              const formdata = new FormData();
+              formdata.append("name", tempFile?.name || "");
+              formdata.append("id", tempFile.id?.toString() || "");
+              formdata.append("file", temp);
+              updateFile.mutate(formdata);
+            }}
+          >
+            save
+          </Button>
         </div>
       </div>
     </div>

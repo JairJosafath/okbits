@@ -51,6 +51,18 @@ export default function useFile() {
       },
     });
   }
+  function getFileData(filename: string) {
+    return useQuery({
+      queryKey: ["fileData", filename],
+      queryFn: async () => {
+        const res = await fetch(API_ENDPOINT + "/files/storage/" + filename, {
+          credentials: "include",
+        });
+        const data = await res.text();
+        return data;
+      },
+    });
+  }
   function getFiles() {
     return useQuery({
       queryKey: ["files"],
@@ -76,10 +88,11 @@ export default function useFile() {
       return data;
     },
   });
-  function updateFile(id: number | string) {
-    useMutation({
-      mutationFn: async (file: FileI) => {
-        const res = await fetch(API_ENDPOINT + "/files/update/" + id, {
+  const updateFile = useMutation({
+    mutationFn: async (formdata: FormData) => {
+      const res = await fetch(
+        API_ENDPOINT + "/files/update/" + formdata.get("id"),
+        {
           method: "post",
           headers: {
             "Content-Type": "application/json",
@@ -87,13 +100,13 @@ export default function useFile() {
 
           credentials: "include",
 
-          body: JSON.stringify(file),
-        });
-        const data = await res.json();
-        return data;
-      },
-    });
-  }
+          body: formdata,
+        }
+      );
+      const data = await res.json();
+      return data;
+    },
+  });
   const deleteFile = useMutation({
     mutationFn: async (id: string | number) => {
       const res = await fetch(API_ENDPOINT + "/files/" + id, {
@@ -111,5 +124,6 @@ export default function useFile() {
     deleteFile,
     getFileById,
     getFiles,
+    getFileData,
   };
 }
