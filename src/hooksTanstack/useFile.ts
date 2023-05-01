@@ -39,10 +39,9 @@ import { FileI } from "@/util/types";
 // // );
 // // }
 export default function useFile() {
-  const queryClient = useQueryClient();
   function getFileById(id: string | number) {
     return useQuery({
-      queryKey: ["file"],
+      queryKey: ["file", id],
       queryFn: async () => {
         const res = await fetch(API_ENDPOINT + "/files/" + id, {
           credentials: "include",

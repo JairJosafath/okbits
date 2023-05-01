@@ -10,7 +10,7 @@ export interface FileI {
   size?: number;
   path?: string;
   arrayBuffer?: ArrayBuffer | null | string;
-  data_unl?: Blob;
+  data_unl?: Buffer;
   data_pdf?: Buffer;
   data_json?: Buffer;
   createdat?: Date;
