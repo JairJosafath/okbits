@@ -89,18 +89,14 @@ export default function useFile() {
     },
   });
   const updateFile = useMutation({
-    mutationFn: async (formdata: FormData) => {
+    mutationFn: async (file: FormData) => {
       const res = await fetch(
-        API_ENDPOINT + "/files/update/" + formdata.get("id"),
+        API_ENDPOINT + "/files/update/" + file.get("id"),
         {
           method: "post",
-          headers: {
-            "Content-Type": "application/json",
-          },
-
           credentials: "include",
-
-          body: formdata,
+          // headers: { "Content-Type": "multipart/form-data" },
+          body: file,
         }
       );
       const data = await res.json();

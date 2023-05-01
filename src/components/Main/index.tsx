@@ -23,7 +23,6 @@ export default function Main() {
     queryClient.getQueryData(["files"]);
   }, [isSuccess]);
   useEffect(() => {
-    console.log(data, "dt");
     if (data) {
       const formData = new FormData();
       formData.append("file", data);

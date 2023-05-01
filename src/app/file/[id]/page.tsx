@@ -116,7 +116,9 @@ export default function Page({ params }: { params: { id: string } }) {
           <Button
             label="Save"
             onClick={() => {
-              const temp = new File([textfile], "updated.unl");
+              const temp = new File([tempFile.data], "updated.unl", {
+                type: "",
+              });
               const formdata = new FormData();
               formdata.append("name", tempFile?.name || "");
               formdata.append("id", tempFile.id?.toString() || "");
