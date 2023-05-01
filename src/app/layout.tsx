@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { AuthContext } from "@/context/authContext";
 import { useEffect, useState } from "react";
 import { UserI } from "@/util/types";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
+  const queryClient = new QueryClient();
   useEffect(() => {
     console.log("user object change", user);
     if (!user.id) {
@@ -34,15 +36,17 @@ export default function RootLayout({
         {user ? (
           <>
             {/* Topbar */}
-            <AuthContext.Provider value={{ user, setUser }}>
-              <Topbar />
+            <QueryClientProvider client={queryClient}>
+              <AuthContext.Provider value={{ user, setUser }}>
+                <Topbar />
 
-              <div className="flex h-full w-full top-0 left-0 absolute pt-10">
-                {/* Sidebar */}
-                <Sidebar />
-                {children}
-              </div>
-            </AuthContext.Provider>
+                <div className="flex h-full w-full top-0 left-0 absolute pt-10">
+                  {/* Sidebar */}
+                  <Sidebar />
+                  {children}
+                </div>
+              </AuthContext.Provider>
+            </QueryClientProvider>
           </>
         ) : (
           children

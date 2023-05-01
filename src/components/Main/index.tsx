@@ -11,21 +11,17 @@ export default function Main() {
   const [data, setData] = useState<File>();
   const { uploadFile, getFiles } = useFile();
   const { isError, isLoading, isSuccess } = uploadFile;
-  const { data: dataFiles } = getFiles();
+
   const queryClient = useQueryClient();
   function getData(event: DragEvent<HTMLDivElement>) {
     const dataTransfer = event.dataTransfer;
     const files = dataTransfer.files;
     setData(files[0]);
   }
-
   useEffect(() => {
+    console.log("runs sidebar datafetch");
     queryClient.getQueryData(["files"]);
-  }, []);
-  useEffect(() => {
-    console.log("files for user", dataFiles);
-  }, [dataFiles]);
-
+  }, [isSuccess]);
   useEffect(() => {
     console.log(data, "dt");
     if (data) {

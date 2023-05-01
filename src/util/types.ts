@@ -7,11 +7,12 @@ export interface UserI {
 export interface FileI {
   id?: number;
   name?: string;
-  size?: string;
+  size?: number;
   path?: string;
-  data_unl?: File;
-  data_pdf?: File;
-  data_json?: File;
+  arrayBuffer?: ArrayBuffer | null | string;
+  data_unl?: Blob;
+  data_pdf?: Buffer;
+  data_json?: Buffer;
   createdat?: Date;
   updatedat?: Date;
   owner?: string;
