@@ -1,14 +1,18 @@
 "use client";
 
-import useFile from "@/hooks/useFile";
+import useFile from "@/hooksTanstack/useFile";
+import { useQueryClient } from "@tanstack/react-query";
 import { DragEvent, useEffect, useRef, useState } from "react";
+// import {};
 
 export default function Main() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { setUpload } = useFile();
-
+  const { uploadFile, getFiles } = useFile();
+  const { isError, isLoading, isSuccess } = uploadFile;
+  const { data: dataFiles } = getFiles();
+  const queryClient = useQueryClient();
   function getData(event: DragEvent<HTMLDivElement>) {
     const dataTransfer = event.dataTransfer;
     const files = dataTransfer.files;
@@ -16,8 +20,19 @@ export default function Main() {
   }
 
   useEffect(() => {
-    console.log("the data", data);
-    if (data) setUpload(data);
+    queryClient.getQueryData(["files"]);
+  }, []);
+  useEffect(() => {
+    console.log("files for user", dataFiles);
+  }, [dataFiles]);
+
+  useEffect(() => {
+    console.log(data, "dt");
+    if (data) {
+      const formData = new FormData();
+      formData.append("file", data);
+      uploadFile.mutate(formData);
+    }
   }, [data]);
 
   return (
@@ -79,6 +94,8 @@ export default function Main() {
       >
         <p>Drop Your File Here</p>
       </div>
+      {isLoading && <div> "loading"</div>}
+      {isLoading && <div> "uploaded"</div>}
     </div>
   );
 }
