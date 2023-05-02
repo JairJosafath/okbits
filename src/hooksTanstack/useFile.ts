@@ -1,44 +1,14 @@
 import { API_ENDPOINT } from "@/service/dev";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryClient,
+} from "@tanstack/react-query";
 import { FileI, EmailI } from "@/util/types";
 
-// export
-
-// // export const createFile = useMutation({
-// //   mutationFn: async (file: FileI) => {
-// //     const res = await fetch(API_ENDPOINT + "/files/add", {
-// //       method: "post",
-// //       headers: {
-// //         "Content-Type": "application/json",
-// //       },
-
-// //       credentials: "include",
-
-// //       body: JSON.stringify(file),
-// //     });
-// //     const data = await res.json();
-// //     return data;
-// //   },
-// // });
-
-// // return useMutation({
-// //   queryKey: ["files"],
-// //   queryFn: async () => {
-// //     const res = await fetch(API_ENDPOINT + "/files/" + id, {
-// //       credentials: "include",
-// //     });
-// //     const data = await res.json();
-// //     console.log("dataaa", data);
-// //     return data;
-// //   },
-// // });
-// // return useQuery(id && ["file", id], () =>
-// //   fetch(API_ENDPOINT + "/files/" + id, { credentials: "include" }).then(
-// //     (res) => console.log(res.data, "tanstack test")
-// //   )
-// // );
-// // }
 export default function useFile() {
+  const queryClient = useQueryClient();
   function getFileById(id: string | number) {
     return useQuery({
       queryKey: ["file", id],
@@ -84,9 +54,16 @@ export default function useFile() {
 
         body: file,
       });
+      if (!res.ok) {
+        throw new Error("Network response was not ok");
+      }
       const data = await res.json();
+
       return data;
     },
+    // onSuccess: () => {
+    //   queryClient.invalidateQueries(["files"]);
+    // },
   });
   const updateFile = useMutation({
     mutationFn: async (file: FormData) => {
@@ -112,6 +89,7 @@ export default function useFile() {
       const data = await res.json();
       return data;
     },
+    // onSuccess: () => queryClient.invalidateQueries(["files"]),
   });
 
   const shareFile = useMutation({

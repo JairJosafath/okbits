@@ -11,13 +11,6 @@ export default function Sidebar() {
   const { data: dataFiles } = getFiles();
   const { isSuccess } = deleteFile;
   const router = useRouter();
-  useEffect(() => {
-    console.log("runs sidebar datafetch");
-    // queryClient.getQueryData(["files"]);
-  }, [dataFiles, isSuccess]);
-  useEffect(() => {
-    console.log("files for user", dataFiles);
-  }, [dataFiles]);
 
   return (
     <div className="w-60  bg-gray-100 ">

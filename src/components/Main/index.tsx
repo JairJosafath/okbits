@@ -18,10 +18,12 @@ export default function Main() {
     const files = dataTransfer.files;
     setData(files[0]);
   }
-  useEffect(() => {
-    console.log("runs sidebar datafetch");
-    queryClient.getQueryData(["files"]);
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   console.log("runs sidebar datafetch");
+  // }, [isSuccess]);
+  // useEffect(() => {
+  //   console.log({ isLoading, isSuccess });
+  // }, [isLoading, isSuccess]);
   useEffect(() => {
     if (data) {
       const formData = new FormData();
@@ -89,8 +91,6 @@ export default function Main() {
       >
         <p>Drop Your File Here</p>
       </div>
-      {isLoading && <div> "loading"</div>}
-      {isLoading && <div> "uploaded"</div>}
     </div>
   );
 }
