@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { ClassAttributes, HTMLAttributes, PropsWithChildren } from "react";
 
 interface Props extends React.ComponentPropsWithoutRef<"button"> {
   label: string;

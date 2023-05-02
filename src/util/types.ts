@@ -1,6 +1,7 @@
 export interface UserI {
   username: string;
   profile?: string;
+  alias?: string;
   id: number;
 }
 

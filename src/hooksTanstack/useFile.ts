@@ -1,15 +1,9 @@
 import { API_ENDPOINT } from "@/service/dev";
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FileI, EmailI } from "@/util/types";
 
 export default function useFile() {
-  const queryClient = useQueryClient();
-  function getFileById(id: string | number) {
+  function getFileById({ id }: { id: string | number }) {
     return useQuery({
       queryKey: ["file", id],
       queryFn: async () => {
@@ -33,18 +27,17 @@ export default function useFile() {
       },
     });
   }
-  function getFiles() {
-    return useQuery({
-      queryKey: ["files"],
-      queryFn: async () => {
-        const res = await fetch(API_ENDPOINT + "/files", {
-          credentials: "include",
-        });
-        const data: FileI[] = await res.json();
-        return data;
-      },
-    });
-  }
+  const getFiles = useQuery({
+    queryKey: ["files"],
+    queryFn: async () => {
+      const res = await fetch(API_ENDPOINT + "/files", {
+        credentials: "include",
+      });
+      const data: FileI[] = await res.json();
+      return data;
+    },
+  });
+
   const uploadFile = useMutation({
     mutationFn: async (file: FormData) => {
       const res = await fetch(API_ENDPOINT + "/files/add", {
@@ -72,12 +65,17 @@ export default function useFile() {
         {
           method: "post",
           credentials: "include",
-          // headers: { "Content-Type": "multipart/form-data" },
           body: file,
         }
       );
       const data = await res.json();
       return data;
+    },
+    onSuccess: () => {
+      const queryClient = useQueryClient();
+      console.log("success,needs refreshing");
+      queryClient.invalidateQueries(["files"]);
+      queryClient.invalidateQueries(["file"]);
     },
   });
   const deleteFile = useMutation({

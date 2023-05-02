@@ -25,14 +25,15 @@ export default function RootLayout({
   const router = useRouter();
   const queryClient = new QueryClient();
   useEffect(() => {
-    console.log("user object change", user);
-  }, [user.id]);
-  useEffect(() => {
     async function autoLogin() {
       const response = await fetch("http://localhost:3001/auto-signin", {
         method: "GET",
         credentials: "include",
       });
+      if (response.status === 401) {
+        router.push("/auth");
+        return;
+      }
       const { user } = await response.json();
       if (user.id) {
         setUser(user);
@@ -47,10 +48,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        {user ? (
-          <>
-            {/* Topbar */}
-            <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={queryClient}>
+          {user.id !== -1 || !user.id ? (
+            <>
+              {/* Topbar */}
+
               <AuthContext.Provider value={{ user, setUser }}>
                 <Topbar />
 
@@ -60,11 +62,11 @@ export default function RootLayout({
                   {children}
                 </div>
               </AuthContext.Provider>
-            </QueryClientProvider>
-          </>
-        ) : (
-          children
-        )}
+            </>
+          ) : (
+            children
+          )}
+        </QueryClientProvider>
       </body>
     </html>
   );

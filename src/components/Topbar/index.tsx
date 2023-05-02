@@ -25,6 +25,7 @@ export default function Topbar() {
         <menu
           className="absolute top-0 right-0 p-4 m-3 mt-12 z-10 bg-gray-200
       h-96 w-96 rounded-md shadow-lg
+      grid content-between 
       "
         >
           {/* header */}
@@ -32,7 +33,7 @@ export default function Topbar() {
             <label className="text-gray-800 ">Account Settings</label>
             <Button
               label="Sign out"
-              custom="bg-red-500 hover:bg-red-600"
+              custom="bg-gray-300 hover:bg-gray-200 text-gray-800"
               onClick={() => {
                 setSignout(true);
                 setShowMenu(false);
@@ -41,8 +42,30 @@ export default function Topbar() {
             />
           </div>
           {/* account info */}
+          <div className=" text-black grid content-between h-[200px] gap-5 p-2">
+            <LabeledInput
+              label="Username"
+              value={user.username}
+              custom="bg-gray-200 text-black"
+              disabled
+            />
+            <LabeledInput label="Alias" value={user.alias} />
+            <Button label="save" custom="w-[100px] mx-auto " />
+          </div>
+
           {/* account settings */}
+
           {/* footer */}
+          <div className="flex justify-around mt-5">
+            <Button
+              label="delete account"
+              custom="bg-red-500 hover:bg-red-600 "
+            />
+            <Button
+              label="reset password"
+              // custom="bg-orange-500 hover:bg-orange-600"
+            />
+          </div>
         </menu>
       )}
     </div>

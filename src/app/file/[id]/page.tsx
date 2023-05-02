@@ -10,19 +10,28 @@ export default function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const { user } = useContext(AuthContext);
   const { getFileById, getFileData, updateFile, shareFile } = useFile();
-  const { data: fileById } = getFileById(id);
-  const { isSuccess } = updateFile;
+  const {
+    data: fileById,
+    isError: isErrorGetFileById,
+    isLoading: isLoadingGetFileById,
+    isSuccess: isSuccessGetFileById,
+  } = getFileById({ id });
+
+  const {
+    isSuccess: updateSuccess,
+    isError: updateError,
+    isLoading: updateLoading,
+  } = updateFile;
   const { isSuccess: shareSuccess } = shareFile;
   const [textfile, setTextFile] = useState("");
-  const { data: file } = getFileData(
-    fileById?.alias?.replace(user?.id.toString() + "/files/", "") || ""
-  );
+  const { data: file } = getFileData(encodeURIComponent(fileById?.alias || ""));
   const [tempFile, setTempFile] = useState({
     id: fileById?.id,
     name: fileById?.name,
     data: textfile,
   });
   const router = useRouter();
+
   useEffect(() => {
     if (file) setTextFile(file);
     setTempFile({

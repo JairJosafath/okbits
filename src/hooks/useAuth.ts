@@ -31,6 +31,7 @@ export default function useAuth() {
   function signUserOut() {
     setReq({
       input: `${API_ENDPOINT}/signout`,
+      init: { method: "POST" },
     });
     setUser({ username: "", id: 0 });
   }

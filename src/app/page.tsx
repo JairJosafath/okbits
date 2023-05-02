@@ -6,7 +6,6 @@ import Sidebar from "@/components/Sidebar";
 import Main from "@/components/Main";
 import { useContext } from "react";
 import { AuthContext } from "@/context/authContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const inter = Inter({ subsets: ["latin"] });
 
