@@ -18,3 +18,15 @@ export interface FileI {
   updatedat?: Date;
   owner?: string;
 }
+
+export interface EmailI {
+  to?: string;
+  subject?: string;
+  cc?: string;
+  text?: string;
+  attached?: {
+    pdf?: boolean;
+    csv?: boolean;
+    json?: boolean;
+  };
+}

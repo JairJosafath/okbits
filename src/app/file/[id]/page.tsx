@@ -3,14 +3,16 @@ import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
 import { AuthContext } from "@/context/authContext";
 import useFile from "@/hooksTanstack/useFile";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const { user } = useContext(AuthContext);
-  const { getFileById, getFileData, updateFile } = useFile();
+  const { getFileById, getFileData, updateFile, shareFile } = useFile();
   const { data: fileById } = getFileById(id);
   const { isSuccess } = updateFile;
+  const { isSuccess: shareSuccess } = shareFile;
   const [textfile, setTextFile] = useState("");
   const { data: file } = getFileData(
     fileById?.alias?.replace(user?.id.toString() + "/files/", "") || ""
@@ -20,7 +22,7 @@ export default function Page({ params }: { params: { id: string } }) {
     name: fileById?.name,
     data: textfile,
   });
-
+  const router = useRouter();
   useEffect(() => {
     if (file) setTextFile(file);
     setTempFile({
@@ -78,6 +80,9 @@ export default function Page({ params }: { params: { id: string } }) {
             color="bg-green-700 px-2 py-1 rounded-md
     text-gray-200
     hover:bg-green-500"
+            onClick={() => {
+              router.push("share/" + id);
+            }}
           >
             share
           </Button>

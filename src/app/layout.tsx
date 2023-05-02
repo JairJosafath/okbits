@@ -5,7 +5,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import { AuthContext } from "@/context/authContext";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserI } from "@/util/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -26,9 +26,23 @@ export default function RootLayout({
   const queryClient = new QueryClient();
   useEffect(() => {
     console.log("user object change", user);
-    if (!user.id) {
-      router.push("/auth");
+  }, [user.id]);
+  useEffect(() => {
+    async function autoLogin() {
+      const response = await fetch("http://localhost:3001/auto-signin", {
+        method: "GET",
+        credentials: "include",
+      });
+      const { user } = await response.json();
+      if (user.id) {
+        setUser(user);
+      } else if (!user) {
+        router.push("/auth");
+      }
     }
+    if (user.id === -1) {
+      router.push("/auth");
+    } else if (!user.id) autoLogin();
   }, [user.id]);
   return (
     <html lang="en">

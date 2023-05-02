@@ -1,6 +1,6 @@
 import { API_ENDPOINT } from "@/service/dev";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileI } from "@/util/types";
+import { FileI, EmailI } from "@/util/types";
 
 // export
 
@@ -114,6 +114,22 @@ export default function useFile() {
     },
   });
 
+  const shareFile = useMutation({
+    mutationFn: async (input: { id: number; email: EmailI }) => {
+      const res = await fetch(API_ENDPOINT + "/files/share/" + input.id, {
+        method: "post",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: input.email,
+        }),
+      });
+      const data = await res.json();
+      return data;
+    },
+  });
   return {
     uploadFile,
     updateFile,
@@ -121,5 +137,6 @@ export default function useFile() {
     getFileById,
     getFiles,
     getFileData,
+    shareFile,
   };
 }

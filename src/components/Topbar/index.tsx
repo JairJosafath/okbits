@@ -35,7 +35,8 @@ export default function Topbar() {
               custom="bg-red-500 hover:bg-red-600"
               onClick={() => {
                 setSignout(true);
-                setUser?.({ username: "", id: 0 });
+                setShowMenu(false);
+                setUser?.({ username: "", id: -1 });
               }}
             />
           </div>

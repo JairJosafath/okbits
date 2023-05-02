@@ -9,7 +9,7 @@ export default function Main() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { uploadFile, getFiles } = useFile();
+  const { uploadFile, getFiles, shareFile } = useFile();
   const { isError, isLoading, isSuccess } = uploadFile;
 
   const queryClient = useQueryClient();
