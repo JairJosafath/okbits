@@ -5,11 +5,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import { DragEvent, useEffect, useRef, useState } from "react";
 
 export default function Main() {
-  const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { uploadFile, shareFile } = useFile();
+  const { uploadFile, getFiles } = useFile();
 
   const { isError, isLoading, isSuccess } = uploadFile;
 
@@ -23,12 +22,9 @@ export default function Main() {
       const formData = new FormData();
       formData.append("file", data);
       uploadFile.mutate(formData);
-    }
+    } //one central way to upload file, whether deropped or clicked
   }, [data]);
 
-  useEffect(() => {
-    console.log(isError, isLoading, isSuccess);
-  }, [isError, isLoading, isSuccess]);
   return (
     <div className="flex-1  bg-gray-0 flex justify-center">
       <input
@@ -86,8 +82,15 @@ export default function Main() {
           getData(e);
         }}
       >
-        <p>Drop Your File Here</p>
+        <p>Drop Your File Here</p>{" "}
       </div>
+      {getFiles().data?.map((file) => (
+        <div
+          key={file.id}
+          className="h-[10px] w-[10px] bg-gray-200
+        m-3 rounded-full"
+        /> //testing tanstack
+      ))}
     </div>
   );
 }

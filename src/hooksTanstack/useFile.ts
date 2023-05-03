@@ -39,11 +39,14 @@ export default function useFile() {
     return useQuery({
       queryKey: ["fileData", filename],
       queryFn: async () => {
-        const res = await fetch(API_ENDPOINT + "/files/storage/" + filename, {
-          credentials: "include",
-        });
-        const data = await res.text();
-        return data;
+        if (filename) {
+          const res = await fetch(API_ENDPOINT + "/files/storage/" + filename, {
+            credentials: "include",
+          });
+          const data = await res.text();
+          return data;
+        }
+        return null;
       },
     });
   }

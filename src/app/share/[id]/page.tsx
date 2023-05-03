@@ -25,7 +25,7 @@ export default function Share({ params }: { params: { id: string } }) {
       csv: false,
       json: false,
     },
-  });
+  }); //email object to send
 
   function updateEmail(params: EmailI) {
     setEmail({ ...email, ...params });

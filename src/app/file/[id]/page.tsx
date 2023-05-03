@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 export default function Page({ params }: { params: { id: string } }) {
-  const id = params.id;
+  const id = params.id; //file id
   const { user } = useContext(AuthContext);
   const { getFileById, getFileData, updateFile, shareFile, getFiles } =
     useFile();
@@ -148,6 +148,7 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
       </div>
       {files?.map((file: FileI) => (
+        //testing tanstack invalidate on same page
         <div key={file.id}>{file.name}</div>
       ))}
     </div>

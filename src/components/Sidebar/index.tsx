@@ -25,6 +25,8 @@ export default function Sidebar() {
 
       <div>
         {dataFiles?.map((file: FileI) => (
+          //TODO
+          //tanstack not updating the state
           <div
             key={file.id}
             className="file m-1 rounded-md px-2 py-1 hover:bg-gray-300 
