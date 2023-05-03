@@ -1,11 +1,17 @@
 import { API_ENDPOINT } from "@/service/dev";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  QueryClient,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { FileI, EmailI } from "@/util/types";
 
 export default function useFile() {
+  const client = useQueryClient();
   function getFileById({ id }: { id: string | number }) {
     return useQuery({
-      queryKey: ["file", id],
+      queryKey: ["file", id, "single"],
       queryFn: async () => {
         const res = await fetch(API_ENDPOINT + "/files/" + id, {
           credentials: "include",
@@ -27,16 +33,6 @@ export default function useFile() {
       },
     });
   }
-  const getFiles = useQuery({
-    queryKey: ["files"],
-    queryFn: async () => {
-      const res = await fetch(API_ENDPOINT + "/files", {
-        credentials: "include",
-      });
-      const data: FileI[] = await res.json();
-      return data;
-    },
-  });
 
   const uploadFile = useMutation({
     mutationFn: async (file: FormData) => {
@@ -50,13 +46,11 @@ export default function useFile() {
       if (!res.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await res.json();
-
-      return data;
+      return await res.json();
     },
-    // onSuccess: () => {
-    //   queryClient.invalidateQueries(["files"]);
-    // },
+    onSuccess: () => {
+      client.invalidateQueries(["files"]);
+    },
   });
   const updateFile = useMutation({
     mutationFn: async (file: FormData) => {
@@ -68,14 +62,11 @@ export default function useFile() {
           body: file,
         }
       );
-      const data = await res.json();
-      return data;
+      return res.json();
     },
     onSuccess: () => {
-      const queryClient = useQueryClient();
-      console.log("success,needs refreshing");
-      queryClient.invalidateQueries(["files"]);
-      queryClient.invalidateQueries(["file"]);
+      client.invalidateQueries(["files"]);
+      client.invalidateQueries(["file"]);
     },
   });
   const deleteFile = useMutation({
@@ -84,10 +75,11 @@ export default function useFile() {
         method: "delete",
         credentials: "include",
       });
-      const data = await res.json();
-      return data;
+      return res.json();
     },
-    // onSuccess: () => queryClient.invalidateQueries(["files"]),
+    onSuccess: () => {
+      client.invalidateQueries(["files"]);
+    },
   });
 
   const shareFile = useMutation({
@@ -111,7 +103,6 @@ export default function useFile() {
     updateFile,
     deleteFile,
     getFileById,
-    getFiles,
     getFileData,
     shareFile,
   };

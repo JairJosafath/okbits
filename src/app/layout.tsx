@@ -8,6 +8,9 @@ import { AuthContext } from "@/context/authContext";
 import { useContext, useEffect, useState } from "react";
 import { UserI } from "@/util/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import useFile from "@/hooksTanstack/useFile";
+import { FilesContext } from "@/context/filesContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +26,7 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({});
   useEffect(() => {
     async function autoLogin() {
       const response = await fetch("http://localhost:3001/auto-signin", {
@@ -58,6 +61,7 @@ export default function RootLayout({
 
                 <div className="flex h-full w-full top-0 left-0 absolute pt-10">
                   {/* Sidebar */}
+
                   <Sidebar />
                   {children}
                 </div>
@@ -66,6 +70,7 @@ export default function RootLayout({
           ) : (
             children
           )}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>
     </html>

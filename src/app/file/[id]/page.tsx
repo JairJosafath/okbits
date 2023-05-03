@@ -3,6 +3,8 @@ import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
 import { AuthContext } from "@/context/authContext";
 import useFile from "@/hooksTanstack/useFile";
+import useFiles from "@/hooksTanstack/useFiles";
+import { FileI } from "@/util/types";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
@@ -11,17 +13,17 @@ export default function Page({ params }: { params: { id: string } }) {
   const { user } = useContext(AuthContext);
   const { getFileById, getFileData, updateFile, shareFile } = useFile();
   const {
+    data: files,
+    isLoading: isLoadingFiles,
+    isError: isErrorFiles,
+  } = useFiles();
+  const {
     data: fileById,
     isError: isErrorGetFileById,
     isLoading: isLoadingGetFileById,
     isSuccess: isSuccessGetFileById,
   } = getFileById({ id });
 
-  const {
-    isSuccess: updateSuccess,
-    isError: updateError,
-    isLoading: updateLoading,
-  } = updateFile;
   const { isSuccess: shareSuccess } = shareFile;
   const [textfile, setTextFile] = useState("");
   const { data: file } = getFileData(encodeURIComponent(fileById?.alias || ""));
@@ -144,6 +146,9 @@ export default function Page({ params }: { params: { id: string } }) {
           </Button>
         </div>
       </div>
+      {files?.map((file: FileI) => (
+        <div key={file.id}>{file.name}</div>
+      ))}
     </div>
   );
 }

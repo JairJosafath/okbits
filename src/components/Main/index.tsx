@@ -3,27 +3,21 @@
 import useFile from "@/hooksTanstack/useFile";
 import { useQueryClient } from "@tanstack/react-query";
 import { DragEvent, useEffect, useRef, useState } from "react";
-// import {};
 
 export default function Main() {
+  const queryClient = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { uploadFile, getFiles, shareFile } = useFile();
+  const { uploadFile, shareFile } = useFile();
+
   const { isError, isLoading, isSuccess } = uploadFile;
 
-  const queryClient = useQueryClient();
   function getData(event: DragEvent<HTMLDivElement>) {
     const dataTransfer = event.dataTransfer;
     const files = dataTransfer.files;
     setData(files[0]);
   }
-  // useEffect(() => {
-  //   console.log("runs sidebar datafetch");
-  // }, [isSuccess]);
-  // useEffect(() => {
-  //   console.log({ isLoading, isSuccess });
-  // }, [isLoading, isSuccess]);
   useEffect(() => {
     if (data) {
       const formData = new FormData();
@@ -32,6 +26,9 @@ export default function Main() {
     }
   }, [data]);
 
+  useEffect(() => {
+    console.log(isError, isLoading, isSuccess);
+  }, [isError, isLoading, isSuccess]);
   return (
     <div className="flex-1  bg-gray-0 flex justify-center">
       <input
