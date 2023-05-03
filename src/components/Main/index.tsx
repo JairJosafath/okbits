@@ -9,9 +9,9 @@ export default function Main() {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { uploadFile, getFiles } = useFile();
-  const { data: hotFiles } = getFiles();
-  const { files, setFiles } = useContext(SideBarContext);
+  const { uploadFile } = useFile();
+  // const { data: hotFiles } = getFiles();
+  // const { files, setFiles } = useContext(SideBarContext);
   const { isError, isLoading, isSuccess } = uploadFile;
 
   function getData(event: DragEvent<HTMLDivElement>) {
@@ -20,10 +20,10 @@ export default function Main() {
     setData(files[0]);
   }
 
-  useEffect(() => {
-    if (isSuccess) setFiles(hotFiles);
-    console.log("trigger hot reload", { hotFiles });
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   if (isSuccess) setFiles(hotFiles);
+  //   console.log("trigger hot reload", { hotFiles });
+  // }, [isSuccess]);
   useEffect(() => {
     if (data) {
       const formData = new FormData();

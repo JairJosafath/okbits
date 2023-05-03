@@ -11,10 +11,10 @@ export default function Sidebar() {
   const { deleteFile, updateFile, shareFile, getFiles } = useFile();
   const { data: dataFiles } = getFiles();
   const router = useRouter();
-  const { files, setFiles } = useContext(SideBarContext);
-  useEffect(() => {
-    setFiles(dataFiles);
-  }, []);
+  // const { files, setFiles } = useContext(SideBarContext);
+  // useEffect(() => {
+  //   setFiles(dataFiles);
+  // }, []);
   return (
     <div className="w-60  bg-gray-100 ">
       <input
@@ -27,7 +27,7 @@ export default function Sidebar() {
       <label className="p-2 border-b w-full block">your files</label>
 
       <div>
-        {files?.map((file: FileI) => (
+        {dataFiles?.map((file: FileI) => (
           // TODO
           // tanstack not updating the state
           <div

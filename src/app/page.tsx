@@ -12,13 +12,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { user } = useContext(AuthContext);
-  // const getFile = API.file.getOne(156);
-  // useEffect(() => {
-  //   async function fn() {
-  //     console.log(await getFile, "new axios way");
-  //   }
-  //   fn();
-  // }, []);
+
   return (
     <>
       {/* Main */}

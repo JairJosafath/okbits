@@ -27,7 +27,7 @@ export default function RootLayout({
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
   const queryClient = new QueryClient();
-  const [files, setFiles] = useState<FileI[]>();
+  // const [files, setFiles] = useState<FileI[]>();
   useEffect(() => {
     async function autoLogin() {
       const response = await fetch("http://localhost:3001/auto-signin", {
@@ -60,12 +60,12 @@ export default function RootLayout({
               <Topbar />
               <div className="flex h-full w-full top-0 left-0 absolute pt-10">
                 {/* Sidebar */}
-                <SideBarContext.Provider
-                  value={{ files: files, setFiles: setFiles }}
-                >
-                  <Sidebar />
-                  {children}
-                </SideBarContext.Provider>
+                {/* <SideBarContext.Provider
+                  value={{ files: files, setFiles: setFiles }} */}
+                {/* > */}
+                <Sidebar />
+                {children}
+                {/* </SideBarContext.Provider> */}
               </div>
             </AuthContext.Provider>
           </>

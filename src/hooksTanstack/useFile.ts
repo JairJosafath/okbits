@@ -29,9 +29,7 @@ export default function useFile() {
   function getFileData(filename: string) {
     return useQuery({
       queryKey: ["fileData", filename],
-      queryFn: () => {
-        API.file.getData(filename);
-      },
+      queryFn: () => API.file.getData(filename),
     });
   }
 

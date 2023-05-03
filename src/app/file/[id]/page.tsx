@@ -19,8 +19,8 @@ export default function Page({ params }: { params: { id: string } }) {
     getFiles,
     deleteFile,
   } = useFile();
-  const { files: sidebarFiles, setFiles: setSidebarFiles } =
-    useContext(SideBarContext);
+  // const { files: sidebarFiles, setFiles: setSidebarFiles } =
+  //   useContext(SideBarContext);
   const {
     data: files,
     isLoading: isLoadingFiles,
@@ -38,7 +38,9 @@ export default function Page({ params }: { params: { id: string } }) {
   const { isSuccess: isSuccessUpdateFile } = updateFile;
   const { isSuccess: shareSuccess } = shareFile;
   const [textfile, setTextFile] = useState("");
-  const { data: file } = getFileData(encodeURIComponent(fileById?.alias || ""));
+  const { data: file } = getFileData(
+    encodeURIComponent(fileById?.alias || "dummy")
+  );
   const [tempFile, setTempFile] = useState({
     id: fileById?.id,
     name: fileById?.name,
@@ -55,10 +57,10 @@ export default function Page({ params }: { params: { id: string } }) {
     });
   }, [file]);
 
-  useEffect(() => {
-    if (isSuccessUpdateFile || isSuccessDeleteFile) setSidebarFiles(files);
-    console.log("trigger hot reload update", { files });
-  }, [isSuccessUpdateFile, isSuccessDeleteFile]);
+  // useEffect(() => {
+  //   if (isSuccessUpdateFile || isSuccessDeleteFile) setSidebarFiles(files);
+  //   console.log("trigger hot reload update", { files });
+  // }, [isSuccessUpdateFile, isSuccessDeleteFile]);
 
   useEffect(() => {
     if (fileById?.data_unl) {
