@@ -9,6 +9,20 @@ import { FileI, EmailI } from "@/util/types";
 
 export default function useFile() {
   const client = useQueryClient();
+  function getFiles() {
+    return useQuery({
+      queryKey: ["files"],
+      queryFn: async () => {
+        const res = await fetch(API_ENDPOINT + "/files", {
+          credentials: "include",
+        });
+        const data: FileI[] = await res.json();
+        console.log(data, "runs");
+        return data;
+      },
+    });
+  }
+
   function getFileById({ id }: { id: string | number }) {
     return useQuery({
       queryKey: ["file", id, "single"],
@@ -79,6 +93,7 @@ export default function useFile() {
     },
     onSuccess: () => {
       client.invalidateQueries(["files"]);
+      client.invalidateQueries(["file"]);
     },
   });
 
@@ -105,5 +120,6 @@ export default function useFile() {
     getFileById,
     getFileData,
     shareFile,
+    getFiles,
   };
 }

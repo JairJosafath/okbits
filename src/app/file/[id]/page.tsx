@@ -11,12 +11,13 @@ import { useContext, useEffect, useState } from "react";
 export default function Page({ params }: { params: { id: string } }) {
   const id = params.id;
   const { user } = useContext(AuthContext);
-  const { getFileById, getFileData, updateFile, shareFile } = useFile();
+  const { getFileById, getFileData, updateFile, shareFile, getFiles } =
+    useFile();
   const {
     data: files,
     isLoading: isLoadingFiles,
     isError: isErrorFiles,
-  } = useFiles();
+  } = getFiles();
   const {
     data: fileById,
     isError: isErrorGetFileById,
