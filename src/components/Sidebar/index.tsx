@@ -1,17 +1,20 @@
 "use client";
-import useFiles from "@/hooksTanstack/useFiles";
 import Icon from "../Icon";
 // import useFile from "@/hooksTanstack/useFile";
 import { useRouter } from "next/navigation";
 import { FileI } from "@/util/types";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import useFile from "@/hooksTanstack/useFile";
+import { SideBarContext } from "@/context/filesContext";
 
 export default function Sidebar() {
   const { deleteFile, updateFile, shareFile, getFiles } = useFile();
   const { data: dataFiles } = getFiles();
   const router = useRouter();
-
+  const { files, setFiles } = useContext(SideBarContext);
+  useEffect(() => {
+    setFiles(dataFiles);
+  }, []);
   return (
     <div className="w-60  bg-gray-100 ">
       <input
@@ -24,9 +27,9 @@ export default function Sidebar() {
       <label className="p-2 border-b w-full block">your files</label>
 
       <div>
-        {dataFiles?.map((file: FileI) => (
-          //TODO
-          //tanstack not updating the state
+        {files?.map((file: FileI) => (
+          // TODO
+          // tanstack not updating the state
           <div
             key={file.id}
             className="file m-1 rounded-md px-2 py-1 hover:bg-gray-300 
@@ -52,6 +55,12 @@ export default function Sidebar() {
               <Icon
                 effect="hover:bg-blue-500"
                 path="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.933-2.185 2.25 2.25 0 00-3.933 2.185z"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (file?.id) {
+                    router.push("/share/" + file?.id);
+                  }
+                }}
               />
             </div>
           </div>

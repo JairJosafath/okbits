@@ -6,11 +6,11 @@ import { Inter } from "next/font/google";
 import Sidebar from "@/components/Sidebar";
 import { AuthContext } from "@/context/authContext";
 import { useContext, useEffect, useState } from "react";
-import { UserI } from "@/util/types";
+import { FileI, UserI } from "@/util/types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import useFile from "@/hooksTanstack/useFile";
-import { FilesContext } from "@/context/filesContext";
+import { SideBarContext } from "@/context/filesContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +26,8 @@ export default function RootLayout({
 }) {
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
-  const queryClient = new QueryClient({});
+  const queryClient = new QueryClient();
+  const [files, setFiles] = useState<FileI[]>();
   useEffect(() => {
     async function autoLogin() {
       const response = await fetch("http://localhost:3001/auto-signin", {
@@ -52,24 +53,23 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <QueryClientProvider client={queryClient}>
-          {user.id !== -1 || !user.id ? (
-            <>
-              {/* Topbar */}
+          <>
+            {/* Topbar */}
 
-              <AuthContext.Provider value={{ user, setUser }}>
-                <Topbar />
-
-                <div className="flex h-full w-full top-0 left-0 absolute pt-10">
-                  {/* Sidebar */}
-
+            <AuthContext.Provider value={{ user, setUser }}>
+              <Topbar />
+              <div className="flex h-full w-full top-0 left-0 absolute pt-10">
+                {/* Sidebar */}
+                <SideBarContext.Provider
+                  value={{ files: files, setFiles: setFiles }}
+                >
                   <Sidebar />
                   {children}
-                </div>
-              </AuthContext.Provider>
-            </>
-          ) : (
-            children
-          )}
+                </SideBarContext.Provider>
+              </div>
+            </AuthContext.Provider>
+          </>
+
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>

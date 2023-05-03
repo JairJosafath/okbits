@@ -6,9 +6,12 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { FileI, EmailI } from "@/util/types";
+import { useContext } from "react";
+import { SideBarContext } from "@/context/filesContext";
 
 export default function useFile() {
   const client = useQueryClient();
+  const { files, setFiles } = useContext(SideBarContext);
   function getFiles() {
     return useQuery({
       queryKey: ["files"],
@@ -16,16 +19,18 @@ export default function useFile() {
         const res = await fetch(API_ENDPOINT + "/files", {
           credentials: "include",
         });
-        const data: FileI[] = await res.json();
-        console.log(data, "runs");
-        return data;
+        const data: FileI[] | object = await res.json();
+        if (data instanceof Array) {
+          setFiles(data);
+          return data;
+        } else return [];
       },
     });
   }
 
-  function getFileById({ id }: { id: string | number }) {
+  function getFileById({ id }: { id: string }) {
     return useQuery({
-      queryKey: ["file", id, "single"],
+      queryKey: ["file", id],
       queryFn: async () => {
         const res = await fetch(API_ENDPOINT + "/files/" + id, {
           credentials: "include",
@@ -60,13 +65,16 @@ export default function useFile() {
 
         body: file,
       });
-      if (!res.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return await res.json();
+
+      return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (variables) => {
       client.invalidateQueries(["files"]);
+      client.invalidateQueries(["file", variables.id]);
+      client.invalidateQueries([
+        "fileData",
+        decodeURIComponent(variables.alias),
+      ]);
     },
   });
   const updateFile = useMutation({
@@ -81,9 +89,10 @@ export default function useFile() {
       );
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (variables) => {
       client.invalidateQueries(["files"]);
-      client.invalidateQueries(["file"]);
+      client.invalidateQueries(["file", variables.id]);
+      client.invalidateQueries(["fileData", variables.alias]);
     },
   });
   const deleteFile = useMutation({
@@ -94,9 +103,9 @@ export default function useFile() {
       });
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: (variables, context) => {
       client.invalidateQueries(["files"]);
-      client.invalidateQueries(["file"]);
+      // manually update sidebar, since the tanstack query doesnt work all the time
     },
   });
 

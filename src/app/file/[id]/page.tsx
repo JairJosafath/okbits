@@ -2,8 +2,8 @@
 import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
 import { AuthContext } from "@/context/authContext";
+import { SideBarContext } from "@/context/filesContext";
 import useFile from "@/hooksTanstack/useFile";
-import useFiles from "@/hooksTanstack/useFiles";
 import { FileI } from "@/util/types";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -11,13 +11,23 @@ import { useContext, useEffect, useState } from "react";
 export default function Page({ params }: { params: { id: string } }) {
   const id = params.id; //file id
   const { user } = useContext(AuthContext);
-  const { getFileById, getFileData, updateFile, shareFile, getFiles } =
-    useFile();
+  const {
+    getFileById,
+    getFileData,
+    updateFile,
+    shareFile,
+    getFiles,
+    deleteFile,
+  } = useFile();
+  const { files: sidebarFiles, setFiles: setSidebarFiles } =
+    useContext(SideBarContext);
   const {
     data: files,
     isLoading: isLoadingFiles,
     isError: isErrorFiles,
   } = getFiles();
+
+  const { isSuccess: isSuccessDeleteFile } = deleteFile;
   const {
     data: fileById,
     isError: isErrorGetFileById,
@@ -25,6 +35,7 @@ export default function Page({ params }: { params: { id: string } }) {
     isSuccess: isSuccessGetFileById,
   } = getFileById({ id });
 
+  const { isSuccess: isSuccessUpdateFile } = updateFile;
   const { isSuccess: shareSuccess } = shareFile;
   const [textfile, setTextFile] = useState("");
   const { data: file } = getFileData(encodeURIComponent(fileById?.alias || ""));
@@ -43,6 +54,11 @@ export default function Page({ params }: { params: { id: string } }) {
       data: file || "",
     });
   }, [file]);
+
+  useEffect(() => {
+    if (isSuccessUpdateFile || isSuccessDeleteFile) setSidebarFiles(files);
+    console.log("trigger hot reload update", { files });
+  }, [isSuccessUpdateFile, isSuccessDeleteFile]);
 
   useEffect(() => {
     if (fileById?.data_unl) {
@@ -103,6 +119,10 @@ export default function Page({ params }: { params: { id: string } }) {
             color="bg-red-700 px-2 py-1 rounded-md
     text-gray-200
     hover:bg-red-500"
+            onClick={() => {
+              deleteFile.mutate(id);
+              router.push("/");
+            }}
           >
             delete
           </Button>
@@ -120,6 +140,14 @@ export default function Page({ params }: { params: { id: string } }) {
         <div className="flex gap-6 justify-self-center">
           <Button
             label="Cancel"
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            reset
+          </Button>
+          <Button
+            label="Reset"
             onClick={() => {
               setTempFile({
                 id: fileById?.id,

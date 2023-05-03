@@ -99,7 +99,10 @@ export default function Share({ params }: { params: { id: string } }) {
           <Button label="cancel" onClick={() => router.back()} />
           <Button
             label="share"
-            onClick={() => shareFile.mutate({ id: parseInt(params.id), email })}
+            onClick={() => {
+              shareFile.mutate({ id: parseInt(params.id), email });
+              router.back();
+            }}
           />
         </div>
       </div>
