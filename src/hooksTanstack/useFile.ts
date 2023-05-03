@@ -8,6 +8,7 @@ import {
 import { FileI, EmailI } from "@/util/types";
 import { useContext } from "react";
 import { SideBarContext } from "@/context/filesContext";
+import { API } from "@/app/api/file";
 
 export default function useFile() {
   const client = useQueryClient();
@@ -15,59 +16,27 @@ export default function useFile() {
   function getFiles() {
     return useQuery({
       queryKey: ["files"],
-      queryFn: async () => {
-        const res = await fetch(API_ENDPOINT + "/files", {
-          credentials: "include",
-        });
-        const data: FileI[] | object = await res.json();
-        if (data instanceof Array) {
-          setFiles(data);
-          return data;
-        } else return [];
-      },
+      queryFn: () => API.file.getMulti(),
     });
   }
 
   function getFileById({ id }: { id: string }) {
     return useQuery({
       queryKey: ["file", id],
-      queryFn: async () => {
-        const res = await fetch(API_ENDPOINT + "/files/" + id, {
-          credentials: "include",
-        });
-        const data: FileI = await res.json();
-        return data;
-      },
+      queryFn: () => API.file.getOne(id),
     });
   }
   function getFileData(filename: string) {
     return useQuery({
       queryKey: ["fileData", filename],
-      queryFn: async () => {
-        if (filename) {
-          const res = await fetch(API_ENDPOINT + "/files/storage/" + filename, {
-            credentials: "include",
-          });
-          const data = await res.text();
-          return data;
-        }
-        return null;
+      queryFn: () => {
+        API.file.getData(filename);
       },
     });
   }
 
   const uploadFile = useMutation({
-    mutationFn: async (file: FormData) => {
-      const res = await fetch(API_ENDPOINT + "/files/add", {
-        method: "post",
-
-        credentials: "include",
-
-        body: file,
-      });
-
-      return res.json();
-    },
+    mutationFn: (file: FormData) => API.file.add(file),
     onSuccess: (variables) => {
       client.invalidateQueries(["files"]);
       client.invalidateQueries(["file", variables.id]);
@@ -78,17 +47,8 @@ export default function useFile() {
     },
   });
   const updateFile = useMutation({
-    mutationFn: async (file: FormData) => {
-      const res = await fetch(
-        API_ENDPOINT + "/files/update/" + file.get("id"),
-        {
-          method: "post",
-          credentials: "include",
-          body: file,
-        }
-      );
-      return res.json();
-    },
+    mutationFn: (file: FormData) =>
+      API.file.update(file.get("id")?.toString() || 0, file),
     onSuccess: (variables) => {
       client.invalidateQueries(["files"]);
       client.invalidateQueries(["file", variables.id]);
@@ -96,34 +56,15 @@ export default function useFile() {
     },
   });
   const deleteFile = useMutation({
-    mutationFn: async (id: string | number) => {
-      const res = await fetch(API_ENDPOINT + "/files/" + id, {
-        method: "delete",
-        credentials: "include",
-      });
-      return res.json();
-    },
-    onSuccess: (variables, context) => {
+    mutationFn: (id: number | string) => API.file.delete(id),
+    onSuccess: () => {
       client.invalidateQueries(["files"]);
-      // manually update sidebar, since the tanstack query doesnt work all the time
     },
   });
 
   const shareFile = useMutation({
-    mutationFn: async (input: { id: number; email: EmailI }) => {
-      const res = await fetch(API_ENDPOINT + "/files/share/" + input.id, {
-        method: "post",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: input.email,
-        }),
-      });
-      const data = await res.json();
-      return data;
-    },
+    mutationFn: ({ id, email }: { id: number | string; email: EmailI }) =>
+      API.file.share({ id, email }),
   });
   return {
     uploadFile,
