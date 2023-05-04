@@ -35,7 +35,7 @@ export default function useProfile() {
     },
   });
 
-  function getProfile(id: string) {
+  function useGetProfile(id: string) {
     return useQuery(["profile", id], async () => {
       const res = await fetch(API_ENDPOINT + "/profile/", {
         credentials: "include",
@@ -43,5 +43,5 @@ export default function useProfile() {
       return res.json();
     });
   }
-  return { updateProfile, deleteProfile, getProfile };
+  return { updateProfile, deleteProfile, useGetProfile };
 }

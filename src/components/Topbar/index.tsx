@@ -12,7 +12,11 @@ export default function Topbar() {
   const { setSignout } = useAuth();
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const router = useRouter();
-  const { updateProfile, deleteProfile, getProfile } = useProfile();
+  const {
+    updateProfile,
+    deleteProfile,
+    useGetProfile: getProfile,
+  } = useProfile();
   const { data: userdata, isSuccess } = getProfile(user.id.toString());
   const [updateUser, setUpdateUser] = useState<UserI>(user);
 

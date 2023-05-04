@@ -13,11 +13,11 @@ export default function Page({ params }: { params: { id: string } }) {
   const id = params.id; //file id
   const { user } = useContext(AuthContext);
   const {
-    getFileById,
-    getFileData,
+    useGetFileById: getFileById,
+    useGetFileData: getFileData,
     updateFile,
     shareFile,
-    getFiles,
+    useGetFiles: getFiles,
     deleteFile,
   } = useFile();
 
