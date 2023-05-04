@@ -11,6 +11,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import useFile from "@/hooksTanstack/useFile";
 import { SideBarContext } from "@/context/filesContext";
+import Status from "@/components/Status";
+import { StatusContext } from "@/context/statusContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +29,10 @@ export default function RootLayout({
   const queryClient = new QueryClient();
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
+  const [status, setStatus] = useState<{ status: string; msg: string }>({
+    status: "",
+    msg: "",
+  });
 
   useEffect(() => {
     async function autoLogin() {
@@ -49,6 +55,7 @@ export default function RootLayout({
       router.push("/auth");
     } else if (!user.id) autoLogin();
   }, [user.id]);
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -57,19 +64,15 @@ export default function RootLayout({
             {/* Topbar */}
 
             <AuthContext.Provider value={{ user, setUser }}>
-              <Topbar />
-              <div className="flex h-full w-full top-0 left-0 absolute pt-10">
-                {/* Sidebar */}
-                {/* <SideBarContext.Provider
-                  value={{ files: files, setFiles: setFiles }} */}
-                {/* > */}
-
-                {children}
-                {/* </SideBarContext.Provider> */}
-              </div>
+              <StatusContext.Provider value={{ status, setStatus }}>
+                <Topbar />
+                <div className="flex h-full w-full top-0 left-0 absolute pt-10">
+                  {children}
+                </div>
+              </StatusContext.Provider>
             </AuthContext.Provider>
           </>
-
+          <Status status={status} setStatus={setStatus} />
           <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </body>

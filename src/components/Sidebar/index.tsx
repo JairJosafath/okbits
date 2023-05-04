@@ -11,6 +11,7 @@ import {
   UseQueryResult,
   useQueryClient,
 } from "@tanstack/react-query";
+import { StatusContext } from "@/context/statusContext";
 
 export default function Sidebar({
   dataFiles,
@@ -26,6 +27,7 @@ export default function Sidebar({
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState(search);
   const { data } = searchFile(query);
+  const { setStatus } = useContext(StatusContext);
   const [results, setResults] = useState<FileI[]>();
   useEffect(() => {
     setResults(data);
@@ -35,11 +37,27 @@ export default function Sidebar({
   }, [dataFiles]);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (search) setQuery(search);
-    }, 1000);
+    let timeout: NodeJS.Timeout;
+    if (search.length > 2) {
+      timeout = setTimeout(() => {
+        setQuery(search);
+      }, 1000);
+    }
+
     return () => clearTimeout(timeout);
   }, [search]);
+  useEffect(() => {
+    setStatus({
+      status: deleteFile.isLoading
+        ? "loading"
+        : deleteFile.isSuccess
+        ? "success"
+        : deleteFile.isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [deleteFile.isSuccess, deleteFile.isError, deleteFile.isLoading]);
   return (
     <div className="w-60  bg-gray-100 ">
       <input

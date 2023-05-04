@@ -3,6 +3,7 @@ import Button from "@/components/Button";
 import LabeledInput from "@/components/LabeledInput";
 import { AuthContext } from "@/context/authContext";
 import { SideBarContext } from "@/context/filesContext";
+import { StatusContext } from "@/context/statusContext";
 import useFile from "@/hooksTanstack/useFile";
 import { FileI } from "@/util/types";
 import { useRouter } from "next/navigation";
@@ -19,24 +20,8 @@ export default function Page({ params }: { params: { id: string } }) {
     getFiles,
     deleteFile,
   } = useFile();
-  // const { files: sidebarFiles, setFiles: setSidebarFiles } =
-  //   useContext(SideBarContext);
-  const {
-    data: files,
-    isLoading: isLoadingFiles,
-    isError: isErrorFiles,
-  } = getFiles();
 
-  const { isSuccess: isSuccessDeleteFile } = deleteFile;
-  const {
-    data: fileById,
-    isError: isErrorGetFileById,
-    isLoading: isLoadingGetFileById,
-    isSuccess: isSuccessGetFileById,
-  } = getFileById({ id });
-
-  const { isSuccess: isSuccessUpdateFile } = updateFile;
-  const { isSuccess: shareSuccess } = shareFile;
+  const { data: fileById, isLoading, isError, isSuccess } = getFileById({ id });
   const [textfile, setTextFile] = useState("");
   const { data: file } = getFileData(
     encodeURIComponent(fileById?.alias || "dummy")
@@ -57,11 +42,43 @@ export default function Page({ params }: { params: { id: string } }) {
     });
   }, [file]);
 
-  // useEffect(() => {
-  //   if (isSuccessUpdateFile || isSuccessDeleteFile) setSidebarFiles(files);
-  //   console.log("trigger hot reload update", { files });
-  // }, [isSuccessUpdateFile, isSuccessDeleteFile]);
-
+  const { setStatus } = useContext(StatusContext);
+  useEffect(() => {
+    setStatus({
+      status: deleteFile.isLoading
+        ? "loading"
+        : deleteFile.isSuccess
+        ? "success"
+        : deleteFile.isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [deleteFile.isSuccess, deleteFile.isError, deleteFile.isLoading]);
+  useEffect(() => {
+    setStatus({
+      status: updateFile.isLoading
+        ? "loading"
+        : updateFile.isSuccess
+        ? "success"
+        : updateFile.isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [updateFile.isSuccess, updateFile.isError, updateFile.isLoading]);
+  useEffect(() => {
+    setStatus({
+      status: isLoading
+        ? "loading"
+        : isSuccess
+        ? "success"
+        : isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [isSuccess, isError, isLoading]);
   useEffect(() => {
     if (fileById?.data_unl) {
       const temp = fileById?.data_unl;

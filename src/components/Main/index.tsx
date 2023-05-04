@@ -1,6 +1,7 @@
 "use client";
 
 import { SideBarContext } from "@/context/filesContext";
+import { StatusContext } from "@/context/statusContext";
 import useFile from "@/hooksTanstack/useFile";
 import { FileI } from "@/util/types";
 import { UseMutationResult, useQueryClient } from "@tanstack/react-query";
@@ -17,17 +18,25 @@ export default function Main({
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
   const { isError, isLoading, isSuccess } = uploadFile;
-
+  const { setStatus } = useContext(StatusContext);
   function getData(event: DragEvent<HTMLDivElement>) {
     const dataTransfer = event.dataTransfer;
     const files = dataTransfer.files;
     setData(files[0]);
   }
 
-  // useEffect(() => {
-  //   if (isSuccess) setFiles(hotFiles);
-  //   console.log("trigger hot reload", { hotFiles });
-  // }, [isSuccess]);
+  useEffect(() => {
+    setStatus({
+      status: isLoading
+        ? "loading"
+        : isSuccess
+        ? "success"
+        : isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [isError, isLoading, isSuccess]);
   useEffect(() => {
     if (data) {
       const formData = new FormData();

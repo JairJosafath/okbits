@@ -4,16 +4,17 @@ import Button from "@/components/Button";
 import LabeledCheckbox from "@/components/LabeledCheckbox";
 import LabeledInput from "@/components/LabeledInput";
 import Topbar from "@/components/Topbar";
+import { StatusContext } from "@/context/statusContext";
 import useFile from "@/hooksTanstack/useFile";
 import { EmailI } from "@/util/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export default function Share({ params }: { params: { id: string } }) {
   const router = useRouter();
   const { shareFile } = useFile();
-
-  const { isSuccess: shareSuccess } = shareFile;
+  const { setStatus } = useContext(StatusContext);
+  const { isSuccess, isError, isLoading } = shareFile;
   const [email, setEmail] = useState<EmailI>({
     to: "",
     subject: "",
@@ -26,7 +27,18 @@ export default function Share({ params }: { params: { id: string } }) {
       json: false,
     },
   }); //email object to send
-
+  useEffect(() => {
+    setStatus({
+      status: isLoading
+        ? "loading"
+        : isSuccess
+        ? "success"
+        : isError
+        ? "error"
+        : "",
+      msg: "",
+    });
+  }, [isSuccess, isError, isLoading]);
   function updateEmail(params: EmailI) {
     setEmail({ ...email, ...params });
   }

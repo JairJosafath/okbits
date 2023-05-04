@@ -22,6 +22,7 @@ export default function useFile() {
     return useQuery({
       queryKey: ["files", query],
       queryFn: () => API.file.search(query),
+      retry: 0,
     });
   }
 
