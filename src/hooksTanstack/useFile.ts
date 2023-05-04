@@ -8,7 +8,7 @@ import {
 import { FileI, EmailI } from "@/util/types";
 import { useContext } from "react";
 import { SideBarContext } from "@/context/filesContext";
-import { API } from "@/app/api/file";
+import { API } from "@/app/api/axios";
 
 export default function useFile() {
   const client = useQueryClient();

@@ -6,7 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import Main from "@/components/Main";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/authContext";
-import { API } from "./api/file";
+import { API } from "./api/axios";
 import useFile from "@/hooksTanstack/useFile";
 import { FileI } from "@/util/types";
 

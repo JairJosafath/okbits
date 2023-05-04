@@ -91,4 +91,38 @@ export const API = {
     update: async () => {},
     delete: async () => {},
   },
+  auth: {
+    signup: async ({
+      username,
+      password,
+    }: {
+      username: string;
+      password: string;
+    }) => {
+      const { data } = await axios.post(
+        `${API_ENDPOINT}/signup/`,
+        { username, password },
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    },
+    signin: async ({
+      username,
+      password,
+    }: {
+      username: string;
+      password: string;
+    }) => {
+      const { data } = await axios.post(
+        `${API_ENDPOINT}/signup/`,
+        { username, password },
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    },
+  },
 };
