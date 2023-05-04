@@ -29,7 +29,6 @@ export const API = {
       return data;
     },
     getMulti: async () => {
-      console.log("fecthing getFiles axios");
       const { data } = await axios.get(`${API_ENDPOINT}/files`, {
         withCredentials: true,
       });
@@ -62,6 +61,15 @@ export const API = {
       const { data } = await axios.post(
         `${API_ENDPOINT}/files/share/${id}`,
         { email: email },
+        {
+          withCredentials: true,
+        }
+      );
+      return data;
+    },
+    search: async (query: string) => {
+      const { data } = await axios.get(
+        `${API_ENDPOINT}/files/search/${query}`,
         {
           withCredentials: true,
         }

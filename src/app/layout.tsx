@@ -24,10 +24,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const queryClient = new QueryClient();
   const [user, setUser] = useState<UserI>({ username: "", id: 0 });
   const router = useRouter();
-  const queryClient = new QueryClient();
-  // const [files, setFiles] = useState<FileI[]>();
+
   useEffect(() => {
     async function autoLogin() {
       const response = await fetch("http://localhost:3001/auto-signin", {
@@ -63,7 +63,7 @@ export default function RootLayout({
                 {/* <SideBarContext.Provider
                   value={{ files: files, setFiles: setFiles }} */}
                 {/* > */}
-                <Sidebar />
+
                 {children}
                 {/* </SideBarContext.Provider> */}
               </div>

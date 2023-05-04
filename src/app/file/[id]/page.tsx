@@ -141,7 +141,7 @@ export default function Page({ params }: { params: { id: string } }) {
         />
         <div className="flex gap-6 justify-self-center">
           <Button
-            label="Cancel"
+            label="Back"
             onClick={() => {
               router.push("/");
             }}
@@ -177,10 +177,10 @@ export default function Page({ params }: { params: { id: string } }) {
           </Button>
         </div>
       </div>
-      {files?.map((file: FileI) => (
+      {/* {files?.map((file: FileI) => (
         //testing tanstack invalidate on same page
         <div key={file.id}>{file.name}</div>
-      ))}
+      ))} */}
     </div>
   );
 }

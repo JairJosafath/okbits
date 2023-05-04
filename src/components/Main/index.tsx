@@ -2,16 +2,20 @@
 
 import { SideBarContext } from "@/context/filesContext";
 import useFile from "@/hooksTanstack/useFile";
-import { useQueryClient } from "@tanstack/react-query";
+import { FileI } from "@/util/types";
+import { UseMutationResult, useQueryClient } from "@tanstack/react-query";
 import { DragEvent, useContext, useEffect, useRef, useState } from "react";
 
-export default function Main() {
+export default function Main({
+  uploadFile,
+  dataFiles,
+}: {
+  uploadFile: UseMutationResult<any, unknown, FormData, unknown>;
+  dataFiles: FileI[];
+}) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [animate, setAnimate] = useState(false);
   const [data, setData] = useState<File>();
-  const { uploadFile } = useFile();
-  // const { data: hotFiles } = getFiles();
-  // const { files, setFiles } = useContext(SideBarContext);
   const { isError, isLoading, isSuccess } = uploadFile;
 
   function getData(event: DragEvent<HTMLDivElement>) {

@@ -12,11 +12,16 @@ import { API } from "@/app/api/file";
 
 export default function useFile() {
   const client = useQueryClient();
-  const { files, setFiles } = useContext(SideBarContext);
   function getFiles() {
     return useQuery({
       queryKey: ["files"],
       queryFn: () => API.file.getMulti(),
+    });
+  }
+  function searchFiles(query: string) {
+    return useQuery({
+      queryKey: ["files", query],
+      queryFn: () => API.file.search(query),
     });
   }
 
@@ -72,5 +77,6 @@ export default function useFile() {
     getFileData,
     shareFile,
     getFiles,
+    searchFiles,
   };
 }
