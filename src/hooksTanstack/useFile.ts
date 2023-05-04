@@ -12,13 +12,13 @@ import { API } from "@/app/api/file";
 
 export default function useFile() {
   const client = useQueryClient();
-  function getFiles() {
+  function useGetFiles() {
     return useQuery({
       queryKey: ["files"],
       queryFn: () => API.file.getMulti(),
     });
   }
-  function searchFiles(query: string) {
+  function useSearchFiles(query: string) {
     return useQuery({
       queryKey: ["files", query],
       queryFn: () => API.file.search(query),
@@ -26,13 +26,13 @@ export default function useFile() {
     });
   }
 
-  function getFileById({ id }: { id: string }) {
+  function useGetFileById({ id }: { id: string }) {
     return useQuery({
       queryKey: ["file", id],
       queryFn: () => API.file.getOne(id),
     });
   }
-  function getFileData(filename: string) {
+  function useGetFileData(filename: string) {
     return useQuery({
       queryKey: ["fileData", filename],
       queryFn: () => API.file.getData(filename),
@@ -74,10 +74,10 @@ export default function useFile() {
     uploadFile,
     updateFile,
     deleteFile,
-    getFileById,
-    getFileData,
+    useGetFileById,
+    useGetFileData,
     shareFile,
-    getFiles,
-    searchFiles,
+    useGetFiles,
+    useSearchFiles,
   };
 }

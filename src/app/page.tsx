@@ -15,7 +15,12 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const { user } = useContext(AuthContext);
 
-  const { deleteFile, searchFiles, getFiles, uploadFile } = useFile();
+  const {
+    deleteFile,
+    useSearchFiles: searchFiles,
+    useGetFiles: getFiles,
+    uploadFile,
+  } = useFile();
   const { data: dataFiles } = getFiles();
   const [hotFiles, setHotFiles] = useState<FileI[]>(dataFiles); //workaround for inconsistent updates using invalidates after upload query
   useEffect(() => {
