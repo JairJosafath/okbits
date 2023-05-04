@@ -16,17 +16,15 @@ export default function SignUp({ state, setState }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [newUser, setNewUser] = useState({ username: "", password: "" });
   const { setCredentialsU } = useAuth();
 
   const warnPassword =
     password !== passwordConfirmation ? "border-red-500" : "";
   const warnEmail = !new RegExp(/^\S+@\S+\.\S+$/).test(username);
 
-  // function signUp() {}
-  // useEffect(() => {
-
-  // }, [newUser]);
+  function signUp() {
+    setCredentialsU({ username, password });
+  }
 
   return (
     <>
@@ -59,18 +57,7 @@ export default function SignUp({ state, setState }: Props) {
       </div>
       {/* footer */}
       <div className="flex justify-center bg-gray-100">
-        <Button
-          label="Create Account"
-          onClick={() => {
-            if (password === passwordConfirmation) {
-              setCredentialsU({
-                username: username,
-                password: password,
-              });
-              setState("signin");
-            }
-          }}
-        />
+        <Button label="Create Account" onClick={signUp} />
       </div>
     </>
   );

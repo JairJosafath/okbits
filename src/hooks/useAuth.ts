@@ -33,6 +33,7 @@ export default function useAuth() {
     });
   }
   function signUp(username: string, password: string) {
+    console.log("signing up", { username, password });
     setReq({
       input: `${API_ENDPOINT}/signup`,
       init: {
@@ -61,8 +62,7 @@ export default function useAuth() {
     if (username && password) sigIn(username, password);
   }, [credentials.password, credentials.username]);
   useEffect(() => {
-    const { username, password } = credentialsU;
-    if (username && password) signUp(username, password);
+    signUp(credentialsU.username, credentialsU.password);
   }, [credentialsU.password, credentialsU.username]);
 
   useEffect(() => {
